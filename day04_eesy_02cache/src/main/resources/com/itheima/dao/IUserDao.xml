@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.dao.IUserDao">
+    <!--  开启user支持二级缓存  -->
+    <cache/>
+    <!-- 查询所有，使用左外联结，在保证左表(User表)的前提下,找到Account中对应的信息,这里MySql会找到重复的信息
+    但MyBatis会自动过滤掉重复信息-->
+    <select id="findAll" resultType="user">
+        SELECT * FROM user u
+    </select>
+    <!-- 根据Id查询用户,当传递参数仅有一个且为int类型(及其包装类)时，占位符可随便写,如id可写为uid-->
+    <select id="findById" parameterType="int" resultType="user" useCache="true">
+        select * from user where id=#{uid}
+    </select>
+    <!-- 更新用户信息-->
+    <update id="updateUser" parameterType="user">
+        update user set username=#{username},address=#{address},sex=#{sex},birthday=#{birthday} where id=#{id}
+    </update>
+
+</mapper>

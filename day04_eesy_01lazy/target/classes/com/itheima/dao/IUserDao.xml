@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.dao.IUserDao">
+    <!--定义User的resultMap-->
+    <resultMap id="userAccountMap" type="User">
+        <id property="id" column="id"></id>
+        <result property="username" column="username"></result>
+        <result property="address" column="address"></result>
+        <result property="sex" column="sex"></result>
+        <result property="birthday" column="birthday"></result>
+        <!--配置user对象中account集合的映射 -->
+        <collection property="accounts" ofType="account"
+                    select="com.itheima.dao.IAccountDao.findAccountByUid" column="id"></collection>
+    </resultMap>
+    <!-- 查询所有，使用左外联结，在保证左表(User表)的前提下,找到Account中对应的信息,这里MySql会找到重复的信息
+    但MyBatis会自动过滤掉重复信息-->
+    <select id="findAll" resultMap="userAccountMap">
+        SELECT * FROM user u
+    </select>
+    <!-- 根据Id查询用户,当传递参数仅有一个且为int类型(及其包装类)时，占位符可随便写,如id可写为uid-->
+    <select id="findById" parameterType="int" resultType="user">
+        select * from user where id=#{uid}
+    </select>
+
+</mapper>
